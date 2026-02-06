@@ -50,7 +50,7 @@ export default function AdminPage() {
                 {link.description}
               </p>
               <span className="mt-6 inline-flex text-xs font-semibold uppercase tracking-[0.2em] text-[var(--accent)]">
-                Open ->
+                Open &rarr;
               </span>
             </Link>
           ))}
