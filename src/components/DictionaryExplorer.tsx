@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import RealLifeExampleCard from "@/components/RealLifeExampleCard";
 import VideoEmbed from "@/components/VideoEmbed";
 import type { TermView } from "@/lib/term-view";
@@ -124,10 +123,19 @@ export default function DictionaryExplorer({
 
                 <p className="text-sm text-[var(--muted)]">{term.definition}</p>
 
-                {isOpen ? (
+                <div
+                  id={`term-${term.slug}`}
+                  className={`overflow-hidden rounded-2xl border border-[var(--stroke)] bg-white p-5 text-sm text-[var(--muted)] transition-all duration-300 ${
+                    isOpen
+                      ? "max-h-[2000px] opacity-100"
+                      : "max-h-0 opacity-0"
+                  }`}
+                  aria-hidden={!isOpen}
+                >
                   <div
-                    id={`term-${term.slug}`}
-                    className="flex flex-col gap-6 rounded-2xl border border-[var(--stroke)] bg-white p-5 text-sm text-[var(--muted)]"
+                    className={`flex flex-col gap-6 transition-transform duration-300 ${
+                      isOpen ? "translate-y-0" : "-translate-y-2"
+                    }`}
                   >
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[var(--accent)]">
@@ -197,15 +205,8 @@ export default function DictionaryExplorer({
                         ))}
                       </div>
                     ) : null}
-
-                    <Link
-                      href={`/dictionary/${term.slug}`}
-                      className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--primary)]"
-                    >
-                      Open dedicated page
-                    </Link>
                   </div>
-                ) : null}
+                </div>
               </article>
             );
           })}
