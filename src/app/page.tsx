@@ -1,65 +1,116 @@
-import Image from "next/image";
+import Link from "next/link";
+import SearchBar from "@/components/SearchBar";
+import SectionTitle from "@/components/SectionTitle";
+import SiteFooter from "@/components/SiteFooter";
+import SiteHeader from "@/components/SiteHeader";
+import TermCard from "@/components/TermCard";
+import { featuredTerms } from "@/lib/data";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="min-h-screen">
+      <SiteHeader />
+      <main>
+        <section className="mx-auto flex max-w-6xl flex-col gap-12 px-6 pb-16 pt-16">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+            <div className="flex flex-col gap-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--accent)]">
+                Founder Lexicon
+              </p>
+              <h1 className="text-balance font-display text-5xl text-[var(--foreground)]">
+                A founder-first dictionary and VC directory for the moments that matter.
+              </h1>
+              <p className="text-lg text-[var(--muted)]">
+                Clear definitions, real-world examples, and curated VC profiles with
+                transparent sources. Built for first-time founders who want confidence
+                without the noise.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href="/dictionary"
+                  className="rounded-full bg-[var(--primary)] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[rgba(15,107,95,0.25)] transition hover:bg-[var(--primary-dark)]"
+                >
+                  Explore the dictionary
+                </Link>
+                <Link
+                  href="/vc"
+                  className="rounded-full border border-[var(--stroke)] bg-white px-6 py-3 text-sm font-semibold text-[var(--foreground)] transition hover:border-[var(--primary)]"
+                >
+                  Browse VC directory
+                </Link>
+              </div>
+            </div>
+            <div className="flex flex-col gap-6 rounded-3xl border border-[var(--stroke)] bg-[var(--card)] p-8 shadow-xl">
+              <SectionTitle
+                eyebrow="Get started"
+                title="Find the right term in seconds"
+                description="Search across fundraising, finance, product, and operations. Every term includes examples, context, and your founder videos."
+              />
+              <SearchBar placeholder="Search startup terms" />
+              <div className="flex flex-wrap gap-3 text-xs font-semibold text-[var(--muted)]">
+                <span className="rounded-full border border-[var(--stroke)] bg-white px-3 py-2">
+                  Pre-seed
+                </span>
+                <span className="rounded-full border border-[var(--stroke)] bg-white px-3 py-2">
+                  Cap table
+                </span>
+                <span className="rounded-full border border-[var(--stroke)] bg-white px-3 py-2">
+                  Runway
+                </span>
+                <span className="rounded-full border border-[var(--stroke)] bg-white px-3 py-2">
+                  Term sheet
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-20">
+          <SectionTitle
+            eyebrow="Dictionary"
+            title="Start with the essential founder vocabulary"
+            description="Curated terms focused on the first 18 months of building. Real-life examples and founder videos keep each concept grounded."
+          />
+          <div className="grid gap-6 md:grid-cols-2">
+            {featuredTerms.map((term) => (
+              <TermCard key={term.slug} term={term} />
+            ))}
+          </div>
+          <Link
+            href="/dictionary"
+            className="text-sm font-semibold text-[var(--primary)]"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            View all dictionary terms &rarr;
+          </Link>
+        </section>
+
+        <section className="mx-auto flex max-w-6xl flex-col gap-10 px-6 pb-24">
+          <SectionTitle
+            eyebrow="VC Directory"
+            title="Investors curated with credible sources"
+            description="Every firm profile prioritizes sources from Forbes, Crunchbase, and Dealroom, with last updated dates for transparency."
+          />
+          <div className="grid gap-6 lg:grid-cols-3">
+            {[
+              "Stage focus and check size",
+              "Sectors and geography filters",
+              "Public approach notes",
+            ].map((item) => (
+              <div
+                key={item}
+                className="rounded-2xl border border-[var(--stroke)] bg-white p-6 text-sm text-[var(--muted)]"
+              >
+                <p className="font-medium text-[var(--foreground)]">{item}</p>
+                <p className="mt-3">
+                  Built to help you narrow the list to the investors that truly fit your
+                  stage and market.
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
+      <SiteFooter />
     </div>
   );
 }

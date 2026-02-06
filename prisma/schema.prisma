@@ -1,0 +1,155 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VideoPlatform {
+  YOUTUBE
+  INSTAGRAM
+}
+
+enum SuggestionType {
+  TERM
+  VC
+}
+
+enum SuggestionStatus {
+  NEW
+  REVIEWING
+  RESOLVED
+}
+
+model Term {
+  id          String            @id @default(cuid())
+  slug        String            @unique
+  term        String
+  category    String
+  definition  String
+  example     String
+  context     String
+  updatedAt   DateTime          @updatedAt
+  createdAt   DateTime          @default(now())
+
+  videos      VideoLink[]
+  sources     TermSource[]
+  exampleCase RealLifeExample?
+  relatedFrom RelatedTerm[]     @relation("RelatedTermFrom")
+  relatedTo   RelatedTerm[]     @relation("RelatedTermTo")
+  suggestions Suggestion[]
+}
+
+model RelatedTerm {
+  id         String @id @default(cuid())
+  fromTerm   Term   @relation("RelatedTermFrom", fields: [fromTermId], references: [id])
+  fromTermId String
+  toTerm     Term   @relation("RelatedTermTo", fields: [toTermId], references: [id])
+  toTermId   String
+
+  @@unique([fromTermId, toTermId])
+}
+
+model VideoLink {
+  id        String        @id @default(cuid())
+  term      Term          @relation(fields: [termId], references: [id])
+  termId    String
+  platform  VideoPlatform
+  url       String
+  title     String
+  createdAt DateTime      @default(now())
+}
+
+model RealLifeExample {
+  id          String   @id @default(cuid())
+  term        Term     @relation(fields: [termId], references: [id])
+  termId      String   @unique
+  summary     String
+  illustrates String
+  url         String
+  source      Source   @relation(fields: [sourceId], references: [id])
+  sourceId    String
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model Source {
+  id        String       @id @default(cuid())
+  label     String
+  url       String       @unique
+  domain    String
+  createdAt DateTime     @default(now())
+
+  termLinks TermSource[]
+  vcLinks   VcSource[]
+  examples  RealLifeExample[]
+  investments Investment[]
+}
+
+model TermSource {
+  id        String   @id @default(cuid())
+  term      Term     @relation(fields: [termId], references: [id])
+  termId    String
+  source    Source   @relation(fields: [sourceId], references: [id])
+  sourceId  String
+  createdAt DateTime @default(now())
+
+  @@unique([termId, sourceId])
+}
+
+model VcFirm {
+  id              String       @id @default(cuid())
+  slug            String       @unique
+  name            String
+  description     String
+  stages          String[]
+  sectors         String[]
+  geographies     String[]
+  checkSizeMinUsd Int?
+  checkSizeMaxUsd Int?
+  approachNotes   String?
+  updatedAt       DateTime     @updatedAt
+  createdAt       DateTime     @default(now())
+
+  sources         VcSource[]
+  investments     Investment[]
+  suggestions     Suggestion[]
+}
+
+model VcSource {
+  id        String   @id @default(cuid())
+  vcFirm    VcFirm   @relation(fields: [vcFirmId], references: [id])
+  vcFirmId  String
+  source    Source   @relation(fields: [sourceId], references: [id])
+  sourceId  String
+  isTopTier Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([vcFirmId, sourceId])
+}
+
+model Investment {
+  id         String   @id @default(cuid())
+  vcFirm     VcFirm   @relation(fields: [vcFirmId], references: [id])
+  vcFirmId   String
+  company    String
+  year       Int?
+  source     Source?  @relation(fields: [sourceId], references: [id])
+  sourceId   String?
+  createdAt  DateTime @default(now())
+}
+
+model Suggestion {
+  id         String           @id @default(cuid())
+  type       SuggestionType
+  status     SuggestionStatus @default(NEW)
+  message    String
+  email      String?
+  createdAt  DateTime         @default(now())
+  term       Term?            @relation(fields: [termId], references: [id])
+  termId     String?
+  vcFirm     VcFirm?           @relation(fields: [vcFirmId], references: [id])
+  vcFirmId   String?
+}
