@@ -5,30 +5,14 @@ import SectionTitle from "@/components/SectionTitle";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 import VideoEmbed from "@/components/VideoEmbed";
-import { terms as sampleTerms } from "@/lib/data";
-import { prisma } from "@/lib/prisma";
-import { mapTermToView } from "@/lib/term-view";
+import { getTermBySlug } from "@/lib/term-data";
 
 export default async function TermDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const dbTerm = await prisma.term
-    .findUnique({
-      where: { slug: params.slug },
-      include: {
-        videos: true,
-        sources: { include: { source: true } },
-        exampleCase: { include: { source: true } },
-        relatedFrom: { include: { toTerm: true } },
-      },
-    })
-    .catch(() => null);
-
-  const term = dbTerm
-    ? mapTermToView(dbTerm)
-    : sampleTerms.find((item) => item.slug === params.slug);
+  const term = await getTermBySlug(params.slug);
 
   if (!term) {
     notFound();

@@ -2,24 +2,10 @@ import DictionaryExplorer from "@/components/DictionaryExplorer";
 import SectionTitle from "@/components/SectionTitle";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
-import { terms as sampleTerms } from "@/lib/data";
-import { prisma } from "@/lib/prisma";
-import { mapTermToView } from "@/lib/term-view";
+import { getAllTerms } from "@/lib/term-data";
 
 export default async function DictionaryPage() {
-  const dbTerms = await prisma.term
-    .findMany({
-      include: {
-        videos: true,
-        sources: { include: { source: true } },
-        exampleCase: { include: { source: true } },
-        relatedFrom: { include: { toTerm: true } },
-      },
-      orderBy: { term: "asc" },
-    })
-    .catch(() => []);
-
-  const viewTerms = dbTerms.length ? dbTerms.map(mapTermToView) : sampleTerms;
+  const viewTerms = await getAllTerms();
   const categories = Array.from(
     new Set(viewTerms.map((term) => term.category)),
   ).sort();
