@@ -9,6 +9,7 @@
     "lint": "eslint",
     "prisma": "prisma",
     "postinstall": "prisma generate",
+    "seed:terms": "node scripts/seed-terms.mjs",
     "db:push": "prisma db push",
     "db:studio": "prisma studio"
   },
